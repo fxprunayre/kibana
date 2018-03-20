@@ -35,6 +35,7 @@ export function VislibVisualizationsLineChartProvider(Private) {
     addCircles(svg, data) {
       const self = this;
       const showCircles = this.seriesConfig.showCircles;
+      const circleRadius = this.seriesConfig.circleRadius;
       const color = this.handler.data.getColorFunc();
       const xScale = this.getCategoryAxis().getScale();
       const yScale = this.getValueAxis().getScale();
@@ -93,13 +94,17 @@ export function VislibVisualizationsLineChartProvider(Private) {
 
       function getCircleRadiusFn(modifier) {
         return function getCircleRadius(d) {
-          const width = self.baseChart.chartConfig.width;
-          const height = self.baseChart.chartConfig.height;
-          const circleRadius = (d.z - radii.min) / radiusStep;
-          const baseMagicNumber = 2;
+          if (circleRadius) {
+            return circleRadius;
+          } else {
+            const width = self.baseChart.chartConfig.width;
+            const height = self.baseChart.chartConfig.height;
+            const circleRadius = (d.z - radii.min) / radiusStep;
+            const baseMagicNumber = 2;
 
-          const base = circleRadius ? Math.sqrt(circleRadius + baseMagicNumber) + lineWidth : lineWidth;
-          return _.min([base, width, height]) + (modifier || 0);
+            const base = circleRadius ? Math.sqrt(circleRadius + baseMagicNumber) + lineWidth : lineWidth;
+            return _.min([base, width, height]) + (modifier || 0);
+          }
         };
       }
 
