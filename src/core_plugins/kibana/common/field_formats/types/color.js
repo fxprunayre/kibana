@@ -21,13 +21,14 @@ import _ from 'lodash';
 import { asPrettyString } from '../../utils/as_pretty_string';
 import { DEFAULT_COLOR } from './color_default';
 
-const convertTemplate = _.template('<span style="<%- style %>"><%- val %></span>');
+const convertTemplate = _.template('<div style="<%- style %>"><%- val %></div>');
 
 export function createColorFormat(FieldFormat) {
   class ColorFormat extends FieldFormat {
     getParamDefaults() {
       return {
         fieldType: null, // populated by editor, see controller below
+        isHtmlFormatter: true, // do not truncate this type of formatter in table cell
         colors: [_.cloneDeep(DEFAULT_COLOR)]
       };
     }

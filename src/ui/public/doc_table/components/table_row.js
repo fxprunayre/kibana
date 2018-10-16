@@ -208,9 +208,16 @@ module.directive('kbnTableRow', function ($compile, $httpParamSerializer, kbnUrl
        */
       function _displayField(row, fieldName, truncate) {
         const indexPattern = $scope.indexPattern;
+
+        // Some fields formatter returned value is
+        // HTML and MUST not be truncated based on formatted text length
+        const fieldFormat = indexPattern.fieldFormatMap[fieldName];
+        const isHtmlFormatter = fieldFormat !== undefined &&
+          fieldFormat.getParamDefaults().isHtmlFormatter === true;
+
         const text = indexPattern.formatField(row, fieldName);
 
-        if (truncate && text.length > MIN_LINE_LENGTH) {
+        if (!isHtmlFormatter && truncate && text.length > MIN_LINE_LENGTH) {
           return truncateByHeightTemplate({
             body: text
           });
