@@ -44,6 +44,7 @@ export class Control {
     this.options = controlParams.options;
     this.type = controlParams.type;
     this.label = controlParams.label ? controlParams.label : controlParams.fieldName;
+    this.filter = controlParams.filter;
     this.useTimeFilter = useTimeFilter;
     this.filterManager = filterManager;
     this.kbnApi = kbnApi;

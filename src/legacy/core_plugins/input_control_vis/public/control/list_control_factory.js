@@ -32,7 +32,7 @@ function getEscapedQuery(query = '') {
   return query.replace(/[.?+*|{}[\]()"\\#@&<>~]/g, (match) => `\\${match}`);
 }
 
-const termsAgg = ({ field, size, direction, query }) => {
+const termsAgg = ({ field, size, direction, query, filter }) => {
   const terms = {
     order: {
       _count: direction
@@ -52,16 +52,29 @@ const termsAgg = ({ field, size, direction, query }) => {
   } else {
     terms.field = field.name;
   }
-
   if (query) {
     terms.include = `.*${getEscapedQuery(query)}.*`;
   }
-
-  return {
+  const agg = {
     'termsAgg': {
       'terms': terms
     }
   };
+
+  if (filter) {
+    return {
+      'termsAgg': {
+        'filter': {
+          'query_string': {
+            'query': filter
+          }
+        },
+        'aggs': agg
+      }
+    };
+  } else {
+    return agg;
+  }
 };
 
 class ListControl extends Control {
@@ -103,7 +116,8 @@ class ListControl extends Control {
       field: indexPattern.fields.byName[fieldName],
       size: this.options.dynamicOptions ? null : _.get(this.options, 'size', 5),
       direction: 'desc',
-      query
+      query,
+      filter: this.filter
     });
     const searchSource = createSearchSource(
       this.kbnApi,
@@ -130,7 +144,9 @@ class ListControl extends Control {
       return;
     }
 
-    const selectOptions = _.get(resp, 'aggregations.termsAgg.buckets', []).map((bucket) => {
+    const selectOptions = _.get(resp,
+      this.filter ? 'aggregations.termsAgg.termsAgg.buckets' : 'aggregations.termsAgg.buckets',
+      []).map((bucket) => {
       return bucket.key;
     });
 

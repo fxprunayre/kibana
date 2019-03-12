@@ -56,6 +56,12 @@ class ControlsTabUi extends Component {
     this.setVisParam('controls', setControl(this.props.editorState.params.controls, controlIndex, updatedControl));
   }
 
+  handleFilterChange = (controlIndex, evt) => {
+    const updatedControl = this.props.editorState.params.controls[controlIndex];
+    updatedControl.filter = evt.target.value;
+    this.setVisParam('controls', setControl(this.props.editorState.params.controls, controlIndex, updatedControl));
+  }
+
   handleIndexPatternChange = (controlIndex, indexPatternId) => {
     const updatedControl = this.props.editorState.params.controls[controlIndex];
     updatedControl.indexPattern = indexPatternId;
@@ -112,6 +118,7 @@ class ControlsTabUi extends Component {
           controlIndex={controlIndex}
           controlParams={controlParams}
           handleLabelChange={this.handleLabelChange}
+          handleFilterChange={this.handleFilterChange}
           moveControl={this.moveControl}
           handleRemoveControl={this.handleRemoveControl}
           handleIndexPatternChange={this.handleIndexPatternChange}

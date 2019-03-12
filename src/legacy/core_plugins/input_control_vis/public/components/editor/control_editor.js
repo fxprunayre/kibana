@@ -40,6 +40,10 @@ class ControlEditorUi extends Component {
     this.props.handleLabelChange(this.props.controlIndex, evt);
   }
 
+  changeFilter = (evt) => {
+    this.props.handleFilterChange(this.props.controlIndex, evt);
+  }
+
   removeControl = () => {
     this.props.handleRemoveControl(this.props.controlIndex);
   }
@@ -95,6 +99,7 @@ class ControlEditorUi extends Component {
     }
 
     const labelId = `controlLabel${this.props.controlIndex}`;
+    const filterId = `controlFilter${this.props.controlIndex}`;
     return (
       <EuiForm>
         <EuiFormRow
@@ -106,7 +111,15 @@ class ControlEditorUi extends Component {
             onChange={this.changeLabel}
           />
         </EuiFormRow>
-
+        <EuiFormRow
+          id={filterId}
+          label={<FormattedMessage id="inputControl.editor.controlEditor.controlFilter" defaultMessage="Filter"/>}
+        >
+          <EuiFieldText
+            value={this.props.controlParams.filter}
+            onChange={this.changeFilter}
+          />
+        </EuiFormRow>
         {controlEditor}
       </EuiForm>
     );
@@ -172,6 +185,7 @@ ControlEditorUi.propTypes = {
   controlIndex: PropTypes.number.isRequired,
   controlParams: PropTypes.object.isRequired,
   handleLabelChange: PropTypes.func.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
   moveControl: PropTypes.func.isRequired,
   handleRemoveControl: PropTypes.func.isRequired,
   handleIndexPatternChange: PropTypes.func.isRequired,
