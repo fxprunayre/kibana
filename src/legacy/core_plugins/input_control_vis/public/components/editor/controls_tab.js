@@ -58,6 +58,12 @@ class ControlsTabUi extends Component {
     this.onChange(setControl(this.props.stateParams.controls, controlIndex, updatedControl));
   }
 
+  handleFilterChange = (controlIndex, evt) => {
+    const updatedControl = this.props.stateParams.controls[controlIndex];
+    updatedControl.filter = evt.target.value;
+    this.onChange(setControl(this.props.stateParams.controls, controlIndex, updatedControl));
+  }
+
   handleFieldNameChange = (controlIndex, fieldName) => {
     const updatedControl = this.props.stateParams.controls[controlIndex];
     updatedControl.fieldName = fieldName;
@@ -107,6 +113,7 @@ class ControlsTabUi extends Component {
           controlIndex={controlIndex}
           controlParams={controlParams}
           handleLabelChange={this.handleLabelChange}
+          handleFilterChange={this.handleFilterChange}
           moveControl={this.moveControl}
           handleRemoveControl={this.handleRemoveControl}
           handleIndexPatternChange={this.handleIndexPatternChange}
